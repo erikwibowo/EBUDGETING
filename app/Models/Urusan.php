@@ -5,13 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Otorisasi extends Model
+class Urusan extends Model
 {
     use HasFactory;
     public $timestamps = false;
-    protected $table = 'otorisasi';
-
-    public function urusan(){
-        return $this->belongsTo(Urusan::class, 'opd', 'kdurusan');
-    }
+    protected $table = 'murusan';
 }

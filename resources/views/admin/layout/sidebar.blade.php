@@ -18,7 +18,7 @@
       </div>
 
       <!-- SidebarSearch Form -->
-      <div class="form-inline">
+      {{-- <div class="form-inline">
         <div class="input-group" data-widget="sidebar-search">
           <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
           <div class="input-group-append">
@@ -27,7 +27,7 @@
             </button>
           </div>
         </div>
-      </div>
+      </div> --}}
 
       <!-- Sidebar Menu -->
       <nav class="mt-2">
@@ -42,19 +42,19 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="{{ route('admin.admin.index') }}" class="nav-link {{ Request::segment(2) == 'admin' ? 'active':'' }}">
+            <a href="{{ route('admin.otorisasi.index') }}" class="nav-link {{ Request::segment(2) == 'otorisasi' ? 'active':'' }}">
               <i class="fas fa-user nav-icon"></i>
-              <p>Admin</p>
+              <p>Otorisasi</p>
             </a>
           </li>
-          <li class="nav-header">MULTI LEVEL EXAMPLE</li>
+          <li class="nav-header">ANGGARAN</li>
           <li class="nav-item">
             <a href="#" class="nav-link">
-              <i class="fas fa-circle nav-icon"></i>
-              <p>Level 1</p>
+              <i class="fas fa-money-bill-wave nav-icon"></i>
+              <p>Input Anggaran</p>
             </a>
           </li>
-          <li class="nav-item menu-open">
+          {{-- <li class="nav-item menu-open">
             <a href="#" class="nav-link active">
               <i class="nav-icon fas fa-circle"></i>
               <p>
@@ -111,7 +111,8 @@
               <i class="fas fa-circle nav-icon"></i>
               <p>Level 1</p>
             </a>
-          </li>
+          </li> --}}
+          <li class="nav-header"></li>
           <li class="nav-item">
             <a href="#" class="nav-link bg-danger" data-toggle="modal" data-target="#modal-logout">
               <i class="fas fa-lock nav-icon"></i>

@@ -29,9 +29,9 @@ Route::group(['prefix' => 'admin',  'middleware' => 'adminauth'], function () {
         return view('admin/dashboard', ['title' => "Dashboard"]);
     })->name('admin.dashboard');
     //Admin
-    Route::get('admin', [OtorisasiController::class, 'index'])->name('admin.admin.index');
-    Route::post('admin/create', [OtorisasiController::class, 'create'])->name('admin.admin.create');
-    Route::put('admin/update', [OtorisasiController::class, 'update'])->name('admin.admin.update');
-    Route::delete('admin/delete', [OtorisasiController::class, 'delete'])->name('admin.admin.delete');
-    Route::post('admin/data', [OtorisasiController::class, 'data'])->name('admin.admin.data');
+    Route::get('otorisasi', [OtorisasiController::class, 'index'])->name('admin.otorisasi.index');
+    Route::post('otorisasi/create', [OtorisasiController::class, 'create'])->name('admin.otorisasi.create');
+    Route::put('otorisasi/update', [OtorisasiController::class, 'update'])->name('admin.otorisasi.update');
+    Route::delete('otorisasi/delete', [OtorisasiController::class, 'delete'])->name('admin.otorisasi.delete');
+    Route::post('otorisasi/data', [OtorisasiController::class, 'data'])->name('admin.otorisasi.data');
 });

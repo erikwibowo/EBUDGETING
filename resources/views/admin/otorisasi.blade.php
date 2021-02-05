@@ -14,7 +14,7 @@
                     <table class="table table-bordered table-hover table-striped datatable yajra-datatable">
                         <thead>
                             <tr>
-                                <th>#</th>
+                                <th>ID</th>
                                 <th>User ID</th>
                                 <th>Password</th>
                                 <th>OPD</th>
@@ -37,7 +37,7 @@
         var table = $('.yajra-datatable').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "{{ route('admin.admin.index') }}",
+            ajax: "{{ route('admin.otorisasi.index') }}",
             columns: [
                 {
                     data: 'id',
@@ -52,8 +52,8 @@
                     name: 'password'
                 },
                 {
-                    data: 'opd',
-                    name: 'opd'
+                    data: 'nmurusan',
+                    name: 'nmurusan'
                 },
                 {
                     data: 'otorisasi',
@@ -77,7 +77,7 @@
                 keyboard: false
             });
             $.ajax({
-                url: "{{ route('admin.admin.data') }}",
+                url: "{{ route('admin.otorisasi.data') }}",
                 type: "POST",
                 dataType: "JSON",
                 data: {
@@ -85,14 +85,12 @@
                     _token: "{{ csrf_token() }}"
                 },
                 success: function(data) {
-                    $("#name").val(data.name);
-                    $("#email").val(data.email);
-                    $("#phone").val(data.phone);
-                    $("#address").val(data.address);
-                    $("#status").val(data.status);
-                    $("#level").val(data.level);
-                    $("#photo").attr("src", "{{ asset('data_file') }}/"+data.photo);
+                    console.log(data);
                     $("#id").val(data.id);
+                    $("#user_id").val(data.user_id);
+                    $("#opd").val(data.opd);
+                    $("#password").val(data.password);
+                    $("#otorisasi").val(data.otorisasi);
                 },
             });
         });
@@ -119,52 +117,22 @@
             </button>
         </div>
         <div class="modal-body">
-            <form action="{{ route('admin.admin.create') }}" method="POST">
+            <form action="{{ route('admin.otorisasi.create') }}" method="POST">
                 @csrf
                 <div class="input-group">
-                    <label>Photo</label>
+                    <label>ID</label>
                     <div class="input-group">
-                        <div class="custom-file">
-                            <input accept=".jpg,.jpeg,.png" type="file" class="custom-file-input @error('photo') is-invalid @enderror" required>
-                            <label class="custom-file-label" for="exampleInputFile">Choose file</label>
-                        </div>
-                        @error('photo')
+                        <input type="text" class="form-control @error('id') is-invalid @enderror" placeholder="User ID" name="id" value="{{ old('id') }}" required>
+                        @error('id')
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
                 </div>
                 <div class="input-group">
-                    <label>Name</label>
+                    <label>User ID</label>
                     <div class="input-group">
-                        <input type="text" class="form-control @error('name') is-invalid @enderror" placeholder="Name" name="name" value="{{ old('name') }}" required>
-                        @error('name')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div>
-                <div class="input-group">
-                    <label>Email</label>
-                    <div class="input-group">
-                        <input type="email" class="form-control @error('email') is-invalid @enderror" placeholder="Email" name="email" value="{{ old('email') }}" required>
-                        @error('email')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div>
-                <div class="input-group">
-                    <label>Phone</label>
-                    <div class="input-group">
-                        <input type="text" class="form-control @error('phone') is-invalid @enderror" placeholder="Phone" name="phone" value="{{ old('phone') }}" required>
-                        @error('phone')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div>
-                <div class="input-group">
-                    <label>Address</label>
-                    <div class="input-group">
-                        <textarea class="form-control @error('address') is-invalid @enderror" placeholder="Address" name="address" required>{{ old('address') }}</textarea>
-                        @error('address')
+                        <input type="text" class="form-control @error('user_id') is-invalid @enderror" placeholder="User ID" name="user_id" value="{{ old('user_id') }}" required>
+                        @error('user_id')
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
@@ -179,13 +147,33 @@
                     </div>
                 </div>
                 <div class="input-group">
+                    <label>OPD</label>
+                    <div class="input-group">
+                        <select class="form-control @error('opd') is-invalid @enderror" name="opd" value="{{ old('opd') }}">
+                            <option value="-">-- Tidak Ada --</option>
+                            @foreach ($urusan as $u)
+                                <option value="{{ $u->kdurusan }}">{{ $u->kdurusan." - ".$u->nmurusan }}</option>
+                            @endforeach
+                        </select>
+                        @error('opd')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+                <div class="input-group">
                     <label>Level</label>
                     <div class="input-group">
-                        <select class="form-control @error('level') is-invalid @enderror" name="level" value="{{ old('level') }}" required>
-                            <option value="ADMIN">ADMIN</option>
-                            <option value="SUPER ADMIN">SUPER ADMIN</option>
+                        <select class="form-control @error('otorisasi') is-invalid @enderror" name="otorisasi" value="{{ old('otorisasi') }}" required>
+                            <option value="ADMINISTRATOR">ADMINISTRATOR</option>
+                            <option value="AUDITOR">AUDITOR</option>
+                            <option value="BAPPEDA">BAPPEDA</option>
+                            <option value="BENDAHARA PENERIMAAN">BENDAHARA PENERIMAAN</option>
+                            <option value="BENDAHARA PENGELUARAN">BENDAHARA PENGELUARAN</option>
+                            <option value="BENDAHARA PPKD">BENDAHARA PPKD</option>
+                            <option value="PPK">PPK</option>
+                            <option value="SIMPEL">SIMPEL</option>
                         </select>
-                        @error('level')
+                        @error('otorisasi')
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
@@ -211,67 +199,46 @@
             </button>
         </div>
         <div class="modal-body">
-            <form action="{{ route('admin.admin.update') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('admin.otorisasi.update') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
-                <center>
-                    <img class="img-circle" src="" id="photo" style="height: auto; width: 10rem">
-                </center>
                 <div class="input-group">
-                    <label>Photo</label>
+                    <label>ID</label>
                     <div class="input-group">
-                        <div class="custom-file">
-                            <input accept=".jpg,.jpeg,.png" type="file" class="custom-file-input @error('photo') is-invalid @enderror">
-                            <label class="custom-file-label" for="exampleInputFile">Choose file</label>
-                        </div>
-                        @error('photo')
+                        <input type="text" class="form-control @error('id') is-invalid @enderror" placeholder="ID" name="id" id="id" value="{{ old('id') }}" disabled>
+                        @error('id')
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
                 </div>
                 <div class="input-group">
-                    <label>Name</label>
+                    <label>User ID</label>
                     <div class="input-group">
-                        <input type="text" class="form-control @error('name') is-invalid @enderror" placeholder="Name" name="name" id="name" value="{{ old('name') }}" required>
-                        <input type="hidden" name="id" id="id">
-                        @error('name')
+                        <input type="text" class="form-control @error('user_id') is-invalid @enderror" placeholder="User ID" name="user_id" id="user_id" value="{{ old('user_id') }}" readonly>
+                        @error('user_id')
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
                 </div>
                 <div class="input-group">
-                    <label>Email</label>
+                    <label>Password</label>
                     <div class="input-group">
-                        <input type="email" class="form-control @error('email') is-invalid @enderror" placeholder="Email" name="email" id="email" value="{{ old('email') }}" required>
-                        @error('email')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div>
-                <div class="input-group">
-                    <label>Phone</label>
-                    <div class="input-group">
-                        <input type="text" class="form-control @error('phone') is-invalid @enderror" placeholder="Phone" name="phone" id="phone" value="{{ old('phone') }}" required>
-                        @error('phone')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div>
-                <div class="input-group">
-                    <label>Address</label>
-                    <div class="input-group">
-                        <textarea class="form-control @error('address') is-invalid @enderror" placeholder="Address" name="address" id="address" required>{{ old('address') }}</textarea>
-                        @error('address')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div>
-                <div class="input-group">
-                    <label>Password</label> &nbsp;
-                    <small class="form-text text-muted">Ketikkan password baru jika ingin mengganti password</small>
-                    <div class="input-group">
-                        <input type="password" class="form-control @error('password') is-invalid @enderror" placeholder="Password" name="password" autocomplete="off">
+                        <input type="text" class="form-control @error('password') is-invalid @enderror" placeholder="Password" name="password" id="password" autocomplete="off" required>
                         @error('password')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>OPD</label>
+                    <div class="input-group">
+                        <select class="form-control @error('opd') is-invalid @enderror" name="opd" id="opd" value="{{ old('opd') }}">
+                            <option value="-">-- Tidak Ada --</option>
+                            @foreach ($urusan as $u)
+                                <option value="{{ $u->kdurusan }}">{{ $u->kdurusan." - ".$u->nmurusan }}</option>
+                            @endforeach
+                        </select>
+                        @error('opd')
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
@@ -279,23 +246,17 @@
                 <div class="input-group">
                     <label>Level</label>
                     <div class="input-group">
-                        <select class="form-control @error('level') is-invalid @enderror" name="level" id="level" value="{{ old('level') }}" required>
-                            <option value="ADMIN">ADMIN</option>
-                            <option value="SUPER ADMIN">SUPER ADMIN</option>
+                        <select class="form-control @error('otorisasi') is-invalid @enderror" name="otorisasi" id="otorisasi" value="{{ old('otorisasi') }}" required>
+                            <option value="ADMINISTRATOR">ADMINISTRATOR</option>
+                            <option value="AUDITOR">AUDITOR</option>
+                            <option value="BAPPEDA">BAPPEDA</option>
+                            <option value="BENDAHARA PENERIMAAN">BENDAHARA PENERIMAAN</option>
+                            <option value="BENDAHARA PENGELUARAN">BENDAHARA PENGELUARAN</option>
+                            <option value="BENDAHARA PPKD">BENDAHARA PPKD</option>
+                            <option value="PPK">PPK</option>
+                            <option value="SIMPEL">SIMPEL</option>
                         </select>
-                        @error('level')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div>
-                <div class="input-group">
-                    <label>Status</label>
-                    <div class="input-group">
-                        <select class="form-control @error('status') is-invalid @enderror" name="status" id="status" value="{{ old('status') }}" required>
-                            <option value="1">AKTIF</option>
-                            <option value="0">NON AKTIF</option>
-                        </select>
-                        @error('status')
+                        @error('otorisasi')
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
@@ -321,7 +282,7 @@
             </button>
         </div>
         <div class="modal-body">
-            <form action="{{ route('admin.admin.delete') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('admin.otorisasi.delete') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('DELETE')
                 <p class="modal-text">Apakah anda yakin akan menghapus? <b id="delete-data"></b></p>

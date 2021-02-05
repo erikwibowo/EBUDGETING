@@ -3,116 +3,99 @@
 namespace App\Http\Controllers;
 
 use App\Models\Otorisasi;
+use App\Models\Urusan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\DataTables;
+use Illuminate\Support\Facades\DB;
 
 class OtorisasiController extends Controller
 {
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Otorisasi::get();
+            $data = DB::select("SELECT a.id, a.user_id, a.password, a.opd, a.otorisasi, b.nmurusan FROM otorisasi a LEFT JOIN murusan b ON a.opd = b.kdurusan");
             return DataTables::of($data)
                 ->addColumn('action', function ($row) {
-                    $btn = '<div class="btn-group"><button type="button" data-id="' . $row->id . '" class="btn btn-primary btn-sm btn-edit"><i class="fa fa-eye"></i></button><button type="button" data-id="' . $row->id . '" data-name="' . $row->user_id . '" class="btn btn-danger btn-sm btn-delete"><i class="fa fa-trash"></i></button></div>';
+                    $btn = '<div class="btn-group"><button type="button" data-id="' . $row->user_id . '" class="btn btn-primary btn-sm btn-edit"><i class="fa fa-eye"></i></button><button type="button" data-id="' . $row->user_id . '" data-name="' . $row->user_id . '" class="btn btn-danger btn-sm btn-delete"><i class="fa fa-trash"></i></button></div>';
                     return $btn;
+                })
+                ->addColumn('nmurusan', function($row){
+                    return $row->opd." - ".$row->nmurusan;
                 })
                 ->rawColumns(['action'])
                 ->make(true);
         }
         $x['title'] = "Data Otorisasi";
-        return view('admin/admin', $x);
+        $x['urusan'] = Urusan::where('level', 3)->orderBy('kdurusan')->get();
+        return view('admin/otorisasi', $x);
     }
 
     public function update(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'name' => 'required',
-            'phone' => 'required',
-            'address' => 'required',
-            'level' => 'required',
-            'status' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return redirect('admin/admin')
-                ->withErrors($validator)
-                ->withInput();
-        }
-
-        if (empty($request->input('password'))) {
-            $data = [
-                'name' => $request->input('name'),
-                'email' => $request->input('email'),
-                'phone' => $request->input('phone'),
-                'address' => $request->input('address'),
-                'level' => $request->input('level'),
-                'status' => $request->input('status')
-            ];
-        } else {
-            $data = [
-                'name' => $request->input('name'),
-                'email' => $request->input('email'),
-                'phone' => $request->input('phone'),
-                'address' => $request->input('address'),
-                'password' => Hash::make($request->input('password')),
-                'level' => $request->input('level'),
-                'status' => $request->input('status')
-            ];
-        }
-        Otorisasi::where('id', $request->input('id'))->update($data);
-        session()->flash('type', 'success');
-        session()->flash('notif', 'Data berhasil disimpan');
-        return redirect('admin/admin');
-    }
-
-    public function create(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'phone' => 'required',
-            'email' => 'required|email|unique:admins',
-            'name' => 'required',
-            'address' => 'required',
-            'level' => 'required',
             'password' => 'required',
+            'otorisasi' => 'required'
         ]);
 
         if ($validator->fails()) {
-            return redirect('admin/admin')
+            return redirect('admin/otorisasi')
                 ->withErrors($validator)
                 ->withInput();
         }
 
         $data = [
-            'name' => $request->input('name'),
-            'email' => $request->input('email'),
-            'phone' => $request->input('phone'),
-            'address' => $request->input('address'),
-            'password' => Hash::make($request->input('password')),
-            'level' => $request->input('level'),
-            'created_at' => now()
+            'opd' => $request->input('opd'),
+            'password' => $request->input('password'),
+            'otorisasi' => $request->input('otorisasi')
+        ];
+        Otorisasi::where('user_id', $request->input('user_id'))->update($data);
+        session()->flash('type', 'success');
+        session()->flash('notif', 'Data berhasil disimpan');
+        return redirect('admin/otorisasi');
+    }
+
+    public function create(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'id' => 'required|unique:otorisasi',
+            'user_id' => 'required|unique:otorisasi',
+            'password' => 'required',
+            'otorisasi' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return redirect('admin/otorisasi')
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $data = [
+            'id' => $request->input('id'),
+            'user_id' => $request->input('user_id'),
+            'opd' => $request->input('opd'),
+            'password' => $request->input('password'),
+            'otorisasi' => $request->input('otorisasi')
         ];
         Otorisasi::insert($data);
         session()->flash('type', 'success');
         session()->flash('notif', 'Data berhasil ditambah');
-        return redirect('admin/admin');
+        return redirect('admin/otorisasi');
     }
 
     public function data(Request $request)
     {
-        echo json_encode(Otorisasi::where(['id' => $request->input('id')])->first());
+        echo json_encode(Otorisasi::where(['user_id' => $request->input('id')])->first());
     }
 
     public function delete(Request $request)
     {
         $id = $request->input('id');
-        Otorisasi::where(['id' => $id])->delete();
+        Otorisasi::where(['user_id' => $id])->delete();
         session()->flash('notif', 'Data berhasil dihapus');
         session()->flash('type', 'success');
-        return redirect('admin/admin');
+        return redirect('admin/otorisasi');
     }
 
     public function auth(Request $request)
