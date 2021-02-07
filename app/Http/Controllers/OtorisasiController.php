@@ -153,8 +153,8 @@ class OtorisasiController extends Controller
     public function logout()
     {
         session()->flash('type', 'info');
-        session()->flash('notif', 'Sampai jumpa ' . session('name'));
-        session()->forget(['id', 'name', 'login_status']);
+        session()->flash('notif', 'Sampai jumpa ' . session('user_id'));
+        session()->forget(['id', 'user_id', 'password', 'opd', 'otorisasi', 'login_status']);
         return redirect('admin/login');
     }
 }

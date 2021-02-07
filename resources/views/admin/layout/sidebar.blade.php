@@ -48,11 +48,58 @@
             </a>
           </li>
           <li class="nav-header">ANGGARAN</li>
-          <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="fas fa-money-bill-wave nav-icon"></i>
-              <p>Input Anggaran</p>
+          <li class="nav-item {{ Request::segment(2) == 'input-anggaran' ? 'menu-open':'' }}">
+            <a href="#" class="nav-link {{ Request::segment(2) == 'input-anggaran' ? 'active':'' }}">
+              <i class="nav-icon fas fa-money-bill-wave nav-icon"></i>
+              <p>
+                Input Anggaran
+                <i class="right fas fa-angle-left"></i>
+              </p>
             </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{{ route('admin.input-anggaran.penyusunan') }}" class="nav-link {{ (Request::segment(2) == 'input-anggaran' && Request::segment(3) == 'penyusunan') ? 'active':'' }}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Penyusunan</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ route('admin.input-anggaran.penyusunan') }}" class="nav-link {{ (Request::segment(2) == 'input-anggaran' && Request::segment(3) == 'parsial1') ? 'active':'' }}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Parsial 1</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ route('admin.input-anggaran.penyusunan') }}" class="nav-link {{ (Request::segment(2) == 'input-anggaran' && Request::segment(3) == 'parsial2') ? 'active':'' }}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Parsial 2</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ route('admin.input-anggaran.penyusunan') }}" class="nav-link {{ (Request::segment(2) == 'input-anggaran' && Request::segment(3) == 'parsial3') ? 'active':'' }}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Parsial 3</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ route('admin.input-anggaran.penyusunan') }}" class="nav-link {{ (Request::segment(2) == 'input-anggaran' && Request::segment(3) == 'parsial4') ? 'active':'' }}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Parsial 4</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ route('admin.input-anggaran.penyusunan') }}" class="nav-link {{ (Request::segment(2) == 'input-anggaran' && Request::segment(3) == 'parsial5') ? 'active':'' }}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Parsial 5</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ route('admin.input-anggaran.penyusunan') }}" class="nav-link {{ (Request::segment(2) == 'input-anggaran' && Request::segment(3) == 'perubahan') ? 'active':'' }}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Perubahan</p>
+                </a>
+              </li>
+            </ul>
           </li>
           {{-- <li class="nav-item menu-open">
             <a href="#" class="nav-link active">

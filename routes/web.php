@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\InputAnggaranController;
 use App\Http\Controllers\OtorisasiController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('admin/login', ['title' => "Login | " . config('variable.webname')]);
 });
 
 Route::get('admin/login', function () {
@@ -34,4 +35,7 @@ Route::group(['prefix' => 'admin',  'middleware' => 'adminauth'], function () {
     Route::put('otorisasi/update', [OtorisasiController::class, 'update'])->name('admin.otorisasi.update');
     Route::delete('otorisasi/delete', [OtorisasiController::class, 'delete'])->name('admin.otorisasi.delete');
     Route::post('otorisasi/data', [OtorisasiController::class, 'data'])->name('admin.otorisasi.data');
+
+    //INPUT ANGGARAN
+    Route::get('input-anggaran/penyusunan', [InputAnggaranController::class, 'penyusunan'])->name('admin.input-anggaran.penyusunan');
 });
