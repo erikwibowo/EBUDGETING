@@ -11,12 +11,15 @@
                 <!-- /.card-header -->
                 <div class="card-body">
                     <div class="table-responsive">
-                    <table class="table table-bordered table-hover table-striped datatable yajra-datatable">
+                    <table class="table table-bordered table-hover datatable yajra-datatable">
                         <thead>
                             <tr>
                                 <th>Kode</th>
                                 <th>Uraian</th>
                                 <th>Susun</th>
+                                <th>Parsial</th>
+                                <th>Selisih</th>
+                                <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -25,6 +28,16 @@
                                     <td>{{ $i->kode }}</td>
                                     <td>{{ $i->uraian }}</td>
                                     <td class="text-right">@rp($i->susun)</td>
+                                    <td class="text-right">@rp($i->parsial)</td>
+                                    <td class="text-right">@rp($i->selisih)</td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <a href="#" class="btn btn-sm btn-info" title="Indikator"><i class="fas fa-list-ul"></i></a>
+                                            @if ($i->tipe == 'S')
+                                                <a href="{{ route('admin.input-rka.parsial1').'?kdprogram='.$i->kode.'&ksuburusan='.$i->kdsuburusan }}" class="btn btn-sm btn-warning" title="Input RKA"><i class="fas fa-pencil-alt"></i></a>
+                                            @endif
+                                        </div>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
