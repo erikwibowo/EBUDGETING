@@ -34,7 +34,7 @@
                                         <div class="btn-group">
                                             <a href="#" class="btn btn-sm btn-info" title="Indikator"><i class="fas fa-list-ul"></i></a>
                                             @if ($i->tipe == 'S')
-                                                <a href="{{ route('admin.input-rka.parsial1').'?kdprogram='.$i->kode.'&ksuburusan='.$i->kdsuburusan }}" class="btn btn-sm btn-warning" title="Input RKA"><i class="fas fa-pencil-alt"></i></a>
+                                                <a href="{{ route('admin.input-rka.parsial1').'?kdsub='.$i->kode.'&kdsuburusan='.$i->kdsuburusan.'&tipe='.substr($i->kode, 5, 2) }}" class="btn btn-sm btn-warning" title="Input RKA"><i class="fas fa-pencil-alt"></i></a>
                                             @endif
                                         </div>
                                     </td>

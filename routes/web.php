@@ -42,5 +42,8 @@ Route::group(['prefix' => 'admin',  'middleware' => 'adminauth'], function () {
     Route::get('input-anggaran/parsial1', [InputAnggaranController::class, 'parsial1'])->name('admin.input-anggaran.parsial1');
 
     //Input RKA
+    //Parsial 1
     Route::get('input-rka/parsial1', [InputRkaController::class, 'parsial1'])->name('admin.input-rka.parsial1');
+    Route::post('input-rka/parsial1/create', [InputRkaController::class, 'create_parsial1'])->name('admin.input-rka.create-parsial1');
+    Route::delete('input-rka/parsial1/delete', [InputRkaController::class, 'delete_parsial1'])->name('admin.input-rka.delete-parsial1');
 });
