@@ -19,27 +19,50 @@
                                 <th>#</th>
                                 <th>Kode Rekening</th>
                                 <th>Uraian</th>
-                                <th>Jumlah</th>
+                                <th>Susun</th>
+                                <th>Ubah</th>
+                                <th>Selisih</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
+                            @php
+                                $jsusun = 0;
+                                $jubah = 0;
+                                $jselisih = 0;
+                            @endphp
                             @foreach ($data as $i)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $i->kdrek }}</td>
-                                    <td>{{ $i->nmrek }}</td>
-                                    <td class="text-right">@rp($i->jumlah)</td>
+                                    <td>{{ $i->uraian }}</td>
+                                    <td class="text-right">@rp($i->susun)</td>
+                                    <td class="text-right">@rp($i->ubah)</td>
+                                    <td class="text-right">@rp($i->selisih)</td>
                                     <td>
                                         <div class="btn-group">
                                             <button class="btn btn-sm btn-primary"><i class="fas fa-pencil-alt"></i></button>
-                                            <button data-kdsub="{{ $i->kdsub }}" data-kdsuburusan="{{ $i->kdsuburusan }}" data-nmrek="{{ $i->nmrek }}" data-kdrek="{{ $i->kdrek }}" class="btn btn-sm btn-danger btn-delete-rekening"><i class="fas fa-trash"></i></button>
-                                            <button class="btn btn-sm btn-warning"><i class="fas fa-th-list"></i></button>
+                                            <button data-kdsub="{{ $i->kdsub }}" data-kdsuburusan="{{ $i->kdsuburusan }}" data-nmrek="{{ $i->uraian }}" data-kdrek="{{ $i->kdrek }}" class="btn btn-sm btn-danger btn-delete-rekening"><i class="fas fa-trash"></i></button>
+                                            <a class="btn btn-sm btn-warning" title="Input Rincian RKA"><i class="fas fa-th-list"></i></a>
                                         </div>
                                     </td>
                                 </tr>
+                                @php
+                                    $jsusun += $i->susun;
+                                    $jubah += $i->ubah;
+                                    $jselisih += $i->selisih;
+                                @endphp
                             @endforeach
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <th class="text-center" colspan="3">Total</th>
+                                <th class="text-right">@rp($jsusun)</th>
+                                <th class="text-right">@rp($jubah)</th>
+                                <th class="text-right">@rp($jselisih)</th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
                         </table>
                     </div>
                 </div>

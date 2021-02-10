@@ -20,7 +20,13 @@ class InputRkaController extends Controller
         }else{
             $x['rekening'] = DB::select("SELECT * FROM mrekening WHERE LEFT(kdrek, 1) IN (5) AND tipe = 'S' AND kdrek NOT IN (SELECT kdrek FROM drka_parsial1 WHERE kdsub = '$request->kdsub' AND kdsuburusan = '$request->kdsuburusan')");
         }
-        $x['data']      = DB::select("SELECT a.kdsub, a.kdsuburusan, a.kdrek, b.nmrek, a.jumlah FROM drka_parsial1 a JOIN mrekening b ON a.kdrek = b.kdrek AND a.kdsuburusan = a.kdsuburusan WHERE a.kdsub = '$request->kdsub' AND a.kdsuburusan = '$request->kdsuburusan'");
+        $x['data']      = DB::select("
+            select kdurusan,kdsuburusan,kdprogram,kdgiat,kdsub,kdrek,uraian,sum(susun) as susun,sum(ubah) as ubah,sum(ubah-susun) as selisih from (
+                select a.kdurusan,a.kdsuburusan,a.kdprogram,a.kdgiat,a.kdsub,a.kdrek,b.nmrek as uraian,jumlah as susun,0 as ubah from drka a left join mrekening b on a.kdrek=b.kdrek where a.kdsub='$request->kdsub' and a.kdurusan='$request->kdsuburusan'
+            union 
+                select a.kdurusan,a.kdsuburusan,a.kdprogram,a.kdgiat,a.kdsub,a.kdrek,b.nmrek as uraian,0 as susun,jumlah as ubah from drka_parsial1 a left join mrekening b on a.kdrek=b.kdrek where a.kdsub='$request->kdsub' and a.kdurusan='$request->kdsuburusan'
+            ) x group by 1,2,3,4,5,6
+        ");
         return view('admin.input-rka.parsial1', $x);
     }
 

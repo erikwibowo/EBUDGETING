@@ -11,7 +11,7 @@
                 <!-- /.card-header -->
                 <div class="card-body">
                     <div class="table-responsive">
-                    <table class="table table-bordered table-hover datatable yajra-datatable">
+                    <table class="table table-bordered table-hover datatable">
                         <thead>
                             <tr>
                                 <th>Kode</th>
@@ -23,6 +23,11 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @php
+                                $jsusun = 0;
+                                $jparsial = 0;
+                                $jselisih = 0;
+                            @endphp
                             @foreach ($data as $i)
                                 <tr style="{{ $i->tipe == 'P' ? 'font-weight: 900; background: rgba(108, 122, 137, 0.2)':($i->tipe == 'S' ? 'font-weight: 300':'font-weight: 500; background: rgba(108, 122, 137, 0.1)') }}">
                                     <td>{{ $i->kode }}</td>
@@ -39,8 +44,24 @@
                                         </div>
                                     </td>
                                 </tr>
+                                @if ($i->tipe == "S")
+                                    @php
+                                        $jsusun += $i->susun;
+                                        $jparsial += $i->parsial;
+                                        $jselisih += $i->selisih;
+                                    @endphp
+                                @endif
                             @endforeach
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <th class="text-center" colspan="2">Total</th>
+                                <th class="text-right">@rp($jsusun)</th>
+                                <th class="text-right">@rp($jparsial)</th>
+                                <th class="text-right">@rp($jselisih)</th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
                         </table>
                     </div>
                 </div>
@@ -49,4 +70,9 @@
                 <!-- /.card -->
         </div>
     </div>
+    <script>
+        $(document).ready(function(){
+            $('.datatable').DataTable();
+        });
+    </script>
 @endsection
