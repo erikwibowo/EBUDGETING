@@ -42,7 +42,6 @@
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
-    @include('admin.layout.header')
     <!-- /.content-header -->
 
     <!-- Main content -->

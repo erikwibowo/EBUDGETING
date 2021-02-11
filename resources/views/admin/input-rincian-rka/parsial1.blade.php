@@ -10,7 +10,8 @@
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
                     <li class="breadcrumb-item"><a href="{{ route('admin.input-anggaran.parsial1') }}">Input Anggaran</a></li>
-                    <li class="breadcrumb-item active">Input RKA</li>
+                    <li class="breadcrumb-item"><a href="{{ route('admin.input-rka.parsial1').'?kdurusan='.Request::input('kdurusan').'&kdsuburusan='.Request::input('kdsuburusan').'&kdprogram='.Request::input('kdprogram').'&kdgiat='.Request::input('kdgiat').'&kdsub='.Request::input('kdsub').'&tipe='.Request::input('tipe') }}">Input RKA</a></li>
+                    <li class="breadcrumb-item active">Input Rincian RKA</li>
                     <li class="breadcrumb-item active">Parsial 1</li>
                 </ol>
                 </div><!-- /.col -->
@@ -22,10 +23,10 @@
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">
-                        <a href="{{ route('admin.input-anggaran.parsial1') }}" class="btn btn-sm btn-warning"><i class="fas fa-arrow-left"></i> Kembali</a>
-                        <button class="btn btn-sm btn-primary" id="btn-tambah-rekening"><i class="fas fa-plus"></i> Tambah</button>
+                        <a href="{{ route('admin.input-rka.parsial1').'?kdurusan='.Request::input('kdurusan').'&kdsuburusan='.Request::input('kdsuburusan').'&kdprogram='.Request::input('kdprogram').'&kdgiat='.Request::input('kdgiat').'&kdsub='.Request::input('kdsub').'&tipe='.Request::input('tipe') }}" class="btn btn-sm btn-warning"><i class="fas fa-arrow-left"></i> Kembali</a>
+                        <button class="btn btn-sm btn-primary" id="btn-tambah-rekening"><i class="fas fa-plus"></i> Header</button>
                         <div class="row mt-2 ml-1">
-                            <h4>{{ $sub->kdsub." ".$sub->nmsub }}</h4>
+                            <h4>{{ $rek->kdrek." ".$rek->nmrek }}</h4>
                         </div>
                     </h3>
                 </div>
@@ -36,7 +37,6 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Kode Rekening</th>
                                 <th>Uraian</th>
                                 <th>Susun</th>
                                 <th>Ubah</th>
@@ -51,20 +51,23 @@
                                 $jselisih = 0;
                             @endphp
                             @foreach ($data as $i)
-                                <tr>
+                                <tr style="{{ $i->tipe == 'H' ? 'font-weight: bold':'' }}">
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $i->kdrek }}</td>
                                     <td>{{ $i->uraian }}</td>
                                     <td class="text-right">@rp($i->susun)</td>
                                     <td class="text-right">@rp($i->ubah)</td>
                                     <td class="text-right">@rp($i->selisih)</td>
                                     <td>
                                         <div class="btn-group">
-                                            {{-- <button class="btn btn-sm btn-primary"><i class="fas fa-pencil-alt"></i></button> --}}
-                                            @if ($i->susun == 0)
-                                                <button data-kdsub="{{ $i->kdsub }}" data-kdsuburusan="{{ $i->kdsuburusan }}" data-nmrek="{{ $i->uraian }}" data-kdrek="{{ $i->kdrek }}" class="btn btn-sm btn-danger btn-delete-rekening"><i class="fas fa-trash"></i></button>
+                                            @if ($i->tipe == "H")
+                                                <button title="Lihat/Edit" class="btn btn-sm btn-primary btn-edit-rinci-rka-h"><i class="fas fa-pencil-alt"></i></button>
+                                                <button title="Tambah Sub Header" class="btn btn-sm btn-success btn-tambah-sub-rinci-rka"><i class="fas fa-plus"></i> Sub Header</button>
+                                            @else
+                                                <a href="{{ route('admin.input-rincian-rka.data-rinci-parsial1').'?kdurusan='.$i->kdurusan.'&kdsuburusan='.$i->kdsuburusan.'&kdprogram='.$i->kdprogram.'&kdgiat='.$i->kdgiat.'&kdsub='.$i->kdsub.'&tipe='.Request::input('tipe').'&kdrek='.$i->kdrek.'&nourut='.$i->nourut.'&urut='.$i->urut }}" title="Lihat/Edit" class="btn btn-sm btn-primary btn-edit-rinci-rka-s"><i class="fas fa-eye"></i></a>
                                             @endif
-                                            <a href="{{ route('admin.input-rincian-rka.parsial1').'?kdurusan='.$i->kdurusan.'&kdsuburusan='.$i->kdsuburusan.'&kdprogram='.$i->kdprogram.'&kdgiat='.$i->kdgiat.'&kdsub='.$i->kdsub.'&tipe='.Request::input('tipe').'&kdrek='.$i->kdrek }}" class="btn btn-sm btn-warning" title="Input Rincian RKA"><i class="fas fa-pencil-alt"></i></a>
+                                            @if (!$i->kunci == "T")
+                                            <button title="Hapus" class="btn btn-sm btn-danger btn-delete-rinci-rka"><i class="fas fa-trash"></i></button>
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>
@@ -77,7 +80,7 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <th class="text-center" colspan="3">Total</th>
+                                <th class="text-center" colspan="2">Total</th>
                                 <th class="text-right">@rp($jsusun)</th>
                                 <th class="text-right">@rp($jubah)</th>
                                 <th class="text-right">@rp($jselisih)</th>
@@ -146,7 +149,7 @@
                                 <th>Pilih</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        {{-- <tbody>
                             @foreach ($rekening as $i)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
@@ -155,15 +158,10 @@
                                     <td><input type="checkbox" value="{{ $i->kdrek }}" name="kdrek[]"></td>
                                 </tr>
                             @endforeach
-                        </tbody>
+                        </tbody> --}}
                     </table>
             </div>
             <div class="modal-footer justify-content-between">
-                <input type="hidden" name="kdurusan" value="{{ $sub->kdurusan }}">
-                <input type="hidden" name="kdsuburusan" value="{{ $sub->kdsuburusan }}">
-                <input type="hidden" name="kdprogram" value="{{ $sub->kdprogram }}">
-                <input type="hidden" name="kdgiat" value="{{ $sub->kdgiat }}">
-                <input type="hidden" name="kdsub" value="{{ $sub->kdsub }}">
                 <input type="hidden" name="tipe" value="{{ Request::input('tipe') }}">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
                 <button type="submit" class="btn btn-success">Tambah</button>

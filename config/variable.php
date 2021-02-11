@@ -1,5 +1,5 @@
 <?php
 
 return [
-    "webname"   => "SIMKEU"
+    "webname"   => "E-Budgeting"
 ];

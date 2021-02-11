@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\InputAnggaranController;
+use App\Http\Controllers\InputRincianRkaController;
 use App\Http\Controllers\InputRkaController;
 use App\Http\Controllers\OtorisasiController;
 use Illuminate\Support\Facades\Route;
@@ -46,4 +47,9 @@ Route::group(['prefix' => 'admin',  'middleware' => 'adminauth'], function () {
     Route::get('input-rka/parsial1', [InputRkaController::class, 'parsial1'])->name('admin.input-rka.parsial1');
     Route::post('input-rka/parsial1/create', [InputRkaController::class, 'create_parsial1'])->name('admin.input-rka.create-parsial1');
     Route::delete('input-rka/parsial1/delete', [InputRkaController::class, 'delete_parsial1'])->name('admin.input-rka.delete-parsial1');
+
+    //Input Rincian RKA
+    //Parsial 1
+    Route::get('input-rincian-rka/parsial1', [InputRincianRkaController::class, 'parsial1'])->name('admin.input-rincian-rka.parsial1');
+    Route::get('input-rincian-rka/data-rinci-parsial1', [InputRincianRkaController::class, 'data_rinci_parsial1'])->name('admin.input-rincian-rka.data-rinci-parsial1');
 });

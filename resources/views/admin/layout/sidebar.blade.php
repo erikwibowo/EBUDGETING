@@ -51,8 +51,8 @@
           </li>
           @endif
           <li class="nav-header">ANGGARAN</li>
-          <li class="nav-item {{ (Request::segment(2) == 'input-anggaran' || Request::segment(2) == 'input-rka') ? 'menu-open':'' }}">
-            <a href="#" class="nav-link {{ Request::segment(2) == 'input-anggaran' ? 'active':'' }}">
+          <li class="nav-item {{ (Request::segment(2) == 'input-anggaran' || Request::segment(2) == 'input-rka' || Request::segment(2) == 'input-rincian-rka') ? 'menu-open':'' }}">
+            <a href="#" class="nav-link {{ (Request::segment(2) == 'input-anggaran' || Request::segment(2) == 'input-rka' || Request::segment(2) == 'input-rincian-rka') ? 'active':'' }}">
               <i class="nav-icon fas fa-money-bill-wave nav-icon"></i>
               <p>
                 Input Anggaran
@@ -61,13 +61,13 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="{{ route('admin.input-anggaran.penyusunan') }}" class="nav-link {{ ((Request::segment(2) == 'input-anggaran' || Request::segment(2) == 'input-rka') && Request::segment(3) == 'penyusunan') ? 'active':'' }}">
+                <a href="{{ route('admin.input-anggaran.penyusunan') }}" class="nav-link {{ ((Request::segment(2) == 'input-anggaran' || Request::segment(2) == 'input-rka' || Request::segment(2) == 'input-rincian-rka') && Request::segment(3) == 'penyusunan') ? 'active':'' }}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Penyusunan</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{ route('admin.input-anggaran.parsial1') }}" class="nav-link {{ ((Request::segment(2) == 'input-anggaran' || Request::segment(2) == 'input-rka') && Request::segment(3) == 'parsial1') ? 'active':'' }}">
+                <a href="{{ route('admin.input-anggaran.parsial1') }}" class="nav-link {{ ((Request::segment(2) == 'input-anggaran' || Request::segment(2) == 'input-rka' || Request::segment(2) == 'input-rincian-rka') && Request::segment(3) == 'parsial1') ? 'active':'' }}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Parsial 1</p>
                 </a>
