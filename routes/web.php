@@ -51,5 +51,5 @@ Route::group(['prefix' => 'admin',  'middleware' => 'adminauth'], function () {
     //Input Rincian RKA
     //Parsial 1
     Route::get('input-rincian-rka/parsial1', [InputRincianRkaController::class, 'parsial1'])->name('admin.input-rincian-rka.parsial1');
-    Route::get('input-rincian-rka/data-rinci-parsial1', [InputRincianRkaController::class, 'data_rinci_parsial1'])->name('admin.input-rincian-rka.data-rinci-parsial1');
+    Route::post('input-rincian-rka/data-rinci-parsial1', [InputRincianRkaController::class, 'data_rinci_parsial1'])->name('admin.input-rincian-rka.data-rinci-parsial1');
 });

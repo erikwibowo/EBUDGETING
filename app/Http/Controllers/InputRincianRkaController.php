@@ -34,6 +34,6 @@ class InputRincianRkaController extends Controller
             'nourut'        => $request->nourut,
             'urut'          => $request->urut,
             'tipe'          => 'S'
-        ])->get());
+        ])->first());
     }
 }
