@@ -1,5 +1,6 @@
 <?php
 
 return [
-    "webname"   => "E-Budgeting"
+    "webname"   => "E-Budgeting",
+    "api-index" => "https://esbh.pekalongankab.go.id/sshapiserver"
 ];
