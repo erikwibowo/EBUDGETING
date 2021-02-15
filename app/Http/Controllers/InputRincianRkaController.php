@@ -34,16 +34,20 @@ class InputRincianRkaController extends Controller
             'kdsub'         => $request->kdsub,
             'kdrek'         => $request->kdrek,
             'tipe'          => 'H'
-        ])->orderBy('nourut', 'desc')->first();
-        $dt_urut = $urut->nourut + 1;
-        if (strlen($dt_urut) == 1) {
-            $fn_urut = "000" . $dt_urut;
-        } elseif (strlen($dt_urut) == 2) {
-            $fn_urut = "00" . $dt_urut;
-        } elseif (strlen($dt_urut) == 3) {
-            $fn_urut = "0" . $dt_urut;
-        } elseif (strlen($dt_urut) == 4) {
-            $fn_urut = $dt_urut;
+        ])->orderBy('nourut', 'desc');
+        if ($urut->count() == 0) {
+            $fn_urut = "0001";
+        }else{
+            $dt_urut = $urut->first()->nourut + 1;
+            if (strlen($dt_urut) == 1) {
+                $fn_urut = "000" . $dt_urut;
+            } elseif (strlen($dt_urut) == 2) {
+                $fn_urut = "00" . $dt_urut;
+            } elseif (strlen($dt_urut) == 3) {
+                $fn_urut = "0" . $dt_urut;
+            } elseif (strlen($dt_urut) == 4) {
+                $fn_urut = $dt_urut;
+            }
         }
         DrkaRinciParsial1::insert([
             'kdurusan'      => $request->kdurusan,
@@ -80,6 +84,22 @@ class InputRincianRkaController extends Controller
         return redirect('admin/input-rincian-rka/parsial1' . '?kdurusan=' . $request->kdurusan . '&kdsuburusan=' . $request->kdsuburusan . '&kdprogram=' . $request->kdprogram . '&kdgiat=' . $request->kdgiat . '&kdsub=' . $request->kdsub . '&tipe=' . $request->tipe . '&kdrek=' . $request->kdrek);
     }
 
+    public function update_header_parsial1(Request $request){
+        DrkaRinciParsial1::where([
+            'kdurusan'      => $request->kdurusan,
+            'kdsuburusan'   => $request->kdsuburusan,
+            'kdprogram'     => $request->kdprogram,
+            'kdgiat'        => $request->kdgiat,
+            'kdsub'         => $request->kdsub,
+            'kdrek'         => $request->kdrek,
+            'nourut'        => $request->nourut,
+            'tipe'          => 'H',
+        ])->update(['uraian' => $request->uraian]);
+        session()->flash('notif', 'Data berhasil disimpan');
+        session()->flash('type', 'success');
+        return redirect('admin/input-rincian-rka/parsial1' . '?kdurusan=' . $request->kdurusan . '&kdsuburusan=' . $request->kdsuburusan . '&kdprogram=' . $request->kdprogram . '&kdgiat=' . $request->kdgiat . '&kdsub=' . $request->kdsub . '&tipe=' . $request->tipe . '&kdrek=' . $request->kdrek);
+    }
+
     public function data_rinci_parsial1(Request $request){
         echo json_encode(DrkaRinciParsial1::where([
             'kdurusan'      => $request->kdurusan,
@@ -104,16 +124,20 @@ class InputRincianRkaController extends Controller
             'kdrek'         => $request->kdrek,
             'nourut'        => $request->nourut,
             'tipe'          => 'S'
-        ])->orderBy('urut', 'desc')->first();
-        $dt_urut = $urut->urut+1;
-        if (strlen($dt_urut) == 1) {
-            $fn_urut = "000".$dt_urut;
-        } elseif (strlen($dt_urut) == 2) {
-            $fn_urut = "00" . $dt_urut;
-        } elseif (strlen($dt_urut) == 3) {
-            $fn_urut = "0" . $dt_urut;
-        } elseif (strlen($dt_urut) == 4) {
-            $fn_urut = $dt_urut;
+        ])->orderBy('urut', 'desc');
+        if ($urut->count() == 0) {
+            $fn_urut = "0001";
+        } else {
+            $dt_urut = $urut->first()->urut + 1;
+            if (strlen($dt_urut) == 1) {
+                $fn_urut = "000" . $dt_urut;
+            } elseif (strlen($dt_urut) == 2) {
+                $fn_urut = "00" . $dt_urut;
+            } elseif (strlen($dt_urut) == 3) {
+                $fn_urut = "0" . $dt_urut;
+            } elseif (strlen($dt_urut) == 4) {
+                $fn_urut = $dt_urut;
+            }
         }
         // dd($fn_urut);
         DrkaRinciParsial1::insert([

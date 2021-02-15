@@ -320,8 +320,9 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{{ route('admin.input-rka.create-parsial1') }}" method="POST">
+                <form action="{{ route('admin.input-rincian-rka.update-header-parsial1') }}" method="POST">
                     @csrf
+                    @method('PUT')
                     <div class="input-group">
                         <label>Nama Header</label>
                         <div class="input-group">
@@ -340,6 +341,7 @@
                 <input type="hidden" id="dh-kdsub" name="kdsub">
                 <input type="hidden" id="dh-kdrek" name="kdrek">
                 <input type="hidden" id="dh-nourut" name="nourut">
+                <input type="hidden" name="tipe" value="{{ Request::input('tipe') }}">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
                 <button type="submit" class="btn btn-primary">Simpan</button>
             </div>
