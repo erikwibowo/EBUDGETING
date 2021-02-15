@@ -281,7 +281,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{{ route('admin.input-rka.create-parsial1') }}" method="POST">
+                <form action="{{ route('admin.input-rincian-rka.create-header-parsial1') }}" method="POST">
                     @csrf
                     <div class="input-group">
                         <label>Nama Header</label>
@@ -294,6 +294,13 @@
                     </div>
             </div>
             <div class="modal-footer justify-content-between">
+                <input type="hidden" name="kdurusan" value="{{ Request::input('kdurusan') }}">
+                <input type="hidden" name="kdsuburusan" value="{{ Request::input('kdsuburusan') }}">
+                <input type="hidden" name="kdprogram" value="{{ Request::input('kdprogram') }}">
+                <input type="hidden" name="kdgiat" value="{{ Request::input('kdgiat') }}">
+                <input type="hidden" name="kdsub" value="{{ Request::input('kdsub') }}">
+                <input type="hidden" name="kdrek" value="{{ Request::input('kdrek') }}">
+                <input type="hidden" name="tipe" value="{{ Request::input('tipe') }}">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
                 <button type="submit" class="btn btn-primary">Simpan</button>
             </div>
