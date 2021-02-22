@@ -13,14 +13,16 @@ class InputRincianRkaController extends Controller
         $x['title']     = "Input Rincian RKA Parsial 1";
         $x['rek']       = Mrekening::where(['kdrek' => $request->kdrek])->first();
         $x['data']      = DB::select("
-        select kdurusan,kdsuburusan,kdprogram,kdgiat,kdsub,kdrek,nourut,tipe,uraian,urut,sum(susun) as susun,sum(ubah) as ubah,sum(ubah-susun) as selisih,kunci from (
-            select kdurusan,kdsuburusan,kdprogram,kdgiat,kdsub,kdrek,nourut,tipe,uraian,urut,jumlah as susun,0 as ubah,'T' as kunci from drka_rinci where
-                kdurusan='$request->kdurusan' and kdsuburusan='$request->kdsuburusan' and kdprogram = '$request->kdprogram' and kdgiat= '$request->kdgiat' and 
-                    kdsub='$request->kdsub' and kdrek = '$request->kdrek' 
+        select kdurusan,kdsuburusan,kdprogram,kdgiat,kdsub,kdrek,nourut,tipe,uraian,urut,sum(susun) as susun,sum(ubah) as ubah,sum(ubah-susun) as selisih,kunci, jenis from (
+            select a.kdurusan,a.kdsuburusan,a.kdprogram,a.kdgiat,a.kdsub,a.kdrek,a.nourut,a.tipe,a.uraian,a.urut,a.jumlah as susun,0 as ubah,'T' as kunci, b.jenis from drka_rinci a 
+            left join msubgiat b on a.kdsub = b.kdsub where
+                a.kdurusan='$request->kdurusan' and a.kdsuburusan='$request->kdsuburusan' and a.kdprogram = '$request->kdprogram' and a.kdgiat= '$request->kdgiat' and 
+                    a.kdsub='$request->kdsub' and a.kdrek = '$request->kdrek' 
         union
-            select kdurusan,kdsuburusan,kdprogram,kdgiat,kdsub,kdrek,nourut,tipe,uraian,urut,0 as susun,jumlah as ubah,kunci from drka_rinci_parsial1 where
-                kdurusan='$request->kdurusan' and kdsuburusan='$request->kdsuburusan' and kdprogram = '$request->kdprogram' and kdgiat= '$request->kdgiat' and
-                    kdsub='$request->kdsub' and kdrek = '$request->kdrek' 
+            select a.kdurusan,a.kdsuburusan,a.kdprogram,a.kdgiat,a.kdsub,a.kdrek,a.nourut,a.tipe,a.uraian,a.urut,0 as susun,a.jumlah as ubah, a.kunci, b.jenis from drka_rinci_parsial1 a 
+            left join msubgiat b on a.kdsub = b.kdsub where
+                a.kdurusan='$request->kdurusan' and a.kdsuburusan='$request->kdsuburusan' and a.kdprogram = '$request->kdprogram' and a.kdgiat= '$request->kdgiat' and
+                    a.kdsub='$request->kdsub' and a.kdrek = '$request->kdrek' 
         ) x group by 1,2,3,4,5,6,7,8,9,10 order by 1,2,3,4,5,6,7,8,9,10");
         return view('admin.input-rincian-rka.parsial1', $x);
     }
@@ -153,26 +155,56 @@ class InputRincianRkaController extends Controller
             'tipe'          => "S",
             'uraian'        => $request->uraian,
             'kdbl'          => "",
-            'idssh'         => $request->idssh,
+            'idssh'         => !empty($request->idssh) ? $request->idssh:"-2",
             'spesifikasi'   => $request->spesifikasi,
-            'vol1'          => 0,
-            'sat1'          => "",
-            'vol2'          => 0,
-            'sat2'          => "",
-            'vol3'          => 0,
-            'sat3'          => "",
-            'vol4'          => 0,
-            'sat4'          => "",
-            'volume'        => 0,
+            'vol1'          => !empty($request->vol1) ? $request->vol1:0,
+            'sat1'          => !empty($request->sat1) ? $request->sat1:"",
+            'vol2'          => !empty($request->vol2) ? $request->vol2:0,
+            'sat2'          => !empty($request->sat2) ? $request->sat2:"",
+            'vol3'          => !empty($request->vol3) ? $request->vol3:0,
+            'sat3'          => !empty($request->sat3) ? $request->sat3:"",
+            'vol4'          => !empty($request->vol4) ? $request->vol4:0,
+            'sat4'          => !empty($request->sat4) ? $request->sat4:"",
+            'volume'        => !empty($request->volume) ? $request->volume:0,
             'satuan'        => $request->satuan,
             'harga'         => $request->harga,
-            'jumlah'        => 0,
+            'jumlah'        => !empty($request->jumlah) ? $request->jumlah:0,
             'urut'          => $fn_urut,
             'kunci'         => 'F'
         ]);
         session()->flash('notif', 'Data berhasil disimpan');
         session()->flash('type', 'success');
         return redirect( 'admin/input-rincian-rka/parsial1' .'?kdurusan=' . $request->kdurusan . '&kdsuburusan=' . $request->kdsuburusan . '&kdprogram=' . $request->kdprogram . '&kdgiat=' . $request->kdgiat . '&kdsub=' . $request->kdsub . '&tipe=' . $request->tipe . '&kdrek=' . $request->kdrek);
+    }
+
+    public function update_parsial1(Request $request){
+        DrkaRinciParsial1::where([
+            'kdurusan'      => $request->kdurusan,
+            'kdsuburusan'   => $request->kdsuburusan,
+            'kdprogram'     => $request->kdprogram,
+            'kdgiat'        => $request->kdgiat,
+            'kdsub'         => $request->kdsub,
+            'kdrek'         => $request->kdrek,
+            'nourut'        => $request->nourut,
+            'urut'          => $request->urut
+        ])->update([
+            'spesifikasi'   => $request->spesifikasi,
+            'vol1'          => $request->vol1,
+            'sat1'          => $request->sat1,
+            'vol2'          => $request->vol2,
+            'sat2'          => $request->sat2,
+            'vol3'          => $request->vol3,
+            'sat3'          => $request->sat3,
+            'vol4'          => $request->vol4,
+            'sat4'          => $request->sat4,
+            'volume'        => $request->volume,
+            'satuan'        => $request->satuan,
+            'harga'         => $request->harga,
+            'jumlah'        => $request->jumlah,
+        ]);
+        session()->flash('notif', 'Data berhasil disimpan');
+        session()->flash('type', 'success');
+        return redirect('admin/input-rincian-rka/parsial1' . '?kdurusan=' . $request->kdurusan . '&kdsuburusan=' . $request->kdsuburusan . '&kdprogram=' . $request->kdprogram . '&kdgiat=' . $request->kdgiat . '&kdsub=' . $request->kdsub . '&tipe=' . $request->tipe . '&kdrek=' . $request->kdrek);
     }
 
     public function delete_parsial1(Request $request){

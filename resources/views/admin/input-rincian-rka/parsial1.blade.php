@@ -33,7 +33,7 @@
                 <!-- /.card-header -->
                 <div class="card-body">
                     <div class="table-responsive">
-                    <table class="table table-bordered table-hover datatable">
+                    <table class="table table-bordered table-hover">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -60,10 +60,10 @@
                                     <td>
                                         <div class="btn-group">
                                             @if ($i->tipe == "H")
-                                                <button title="Lihat/Edit" data-kdurusan="{{ $i->kdurusan }}" data-kdsuburusan="{{ $i->kdsuburusan }}" data-kdprogram="{{ $i->kdprogram }}" data-kdgiat="{{ $i->kdgiat }}" data-kdsub="{{ $i->kdsub }}" data-kdrek="{{ $i->kdrek }}" data-nourut="{{ $i->nourut }}" data-uraian="{{ $i->uraian }}" class="btn btn-sm btn-primary btn-detail-header"><i class="fas fa-pencil-alt"></i></button>
-                                                <button title="Tambah Sub Header" data-kdurusan="{{ $i->kdurusan }}" data-kdsuburusan="{{ $i->kdsuburusan }}" data-kdprogram="{{ $i->kdprogram }}" data-kdgiat="{{ $i->kdgiat }}" data-kdsub="{{ $i->kdsub }}" data-kdrek="{{ $i->kdrek }}" data-nourut="{{ $i->nourut }}" class="btn btn-sm btn-success btn-tambah-subheader"><i class="fas fa-plus"></i> Rinci</button>
+                                                {{-- <button title="Lihat/Edit" data-kdurusan="{{ $i->kdurusan }}" data-kdsuburusan="{{ $i->kdsuburusan }}" data-kdprogram="{{ $i->kdprogram }}" data-kdgiat="{{ $i->kdgiat }}" data-kdsub="{{ $i->kdsub }}" data-kdrek="{{ $i->kdrek }}" data-nourut="{{ $i->nourut }}" data-uraian="{{ $i->uraian }}" class="btn btn-sm btn-primary btn-detail-header"><i class="fas fa-pencil-alt"></i></button> --}}
+                                                <button title="Tambah Sub Header" data-kdurusan="{{ $i->kdurusan }}" data-kdsuburusan="{{ $i->kdsuburusan }}" data-kdprogram="{{ $i->kdprogram }}" data-kdgiat="{{ $i->kdgiat }}" data-kdsub="{{ $i->kdsub }}" data-kdrek="{{ $i->kdrek }}" data-nourut="{{ $i->nourut }}" class="btn btn-sm btn-success {{ $i->jenis == '52' ? 'btn-tambah-subheader':'btn-tambah-subheader2' }}"><i class="fas fa-plus"></i> Rinci</button>
                                             @else
-                                                <button title="Lihat/Edit" class="btn btn-sm btn-primary btn-detail-subheader" data-kdurusan="{{ $i->kdurusan }}" data-kdsuburusan="{{ $i->kdsuburusan }}" data-kdprogram="{{ $i->kdprogram }}" data-kdgiat="{{ $i->kdgiat }}" data-kdsub="{{ $i->kdsub }}" data-kdrek="{{ $i->kdrek }}" data-nourut="{{ $i->nourut }}" data-urut="{{ $i->urut }}"><i class="fas fa-eye"></i></button>
+                                                <button title="Lihat/Edit" class="btn btn-sm btn-primary btn-detail-subheader" data-kdurusan="{{ $i->kdurusan }}" data-kdsuburusan="{{ $i->kdsuburusan }}" data-kdprogram="{{ $i->kdprogram }}" data-kdgiat="{{ $i->kdgiat }}" data-kdsub="{{ $i->kdsub }}" data-kdrek="{{ $i->kdrek }}" data-nourut="{{ $i->nourut }}" data-urut="{{ $i->urut }}" data-jenis="{{ $i->jenis }}"><i class="fas fa-eye"></i></button>
                                                 @if ($i->kunci == "F")
                                                 <button title="Hapus" class="btn btn-sm btn-danger btn-delete-subheader" data-kdurusan="{{ $i->kdurusan }}" data-kdsuburusan="{{ $i->kdsuburusan }}" data-kdprogram="{{ $i->kdprogram }}" data-kdgiat="{{ $i->kdgiat }}" data-kdsub="{{ $i->kdsub }}" data-kdrek="{{ $i->kdrek }}" data-nourut="{{ $i->nourut }}" data-urut="{{ $i->urut }}" data-uraian="{{ $i->uraian }}"><i class="fas fa-trash"></i></button>
                                                 @endif
@@ -140,6 +140,7 @@
                 $("#dh-uraian").val($(this).attr('data-uraian'));
             })
             $(".btn-detail-subheader").on('click', function(){
+                hitung_volume();
                 let kdurusan = $(this).attr('data-kdurusan');
                 let kdsuburusan = $(this).attr('data-kdsuburusan');
                 let kdprogram = $(this).attr('data-kdprogram');
@@ -148,6 +149,12 @@
                 let kdrek = $(this).attr('data-kdrek');
                 let nourut = $(this).attr('data-nourut');
                 let urut = $(this).attr('data-urut');
+                let jenis = $(this).attr('data-jenis');
+                if (jenis == '52') {
+                    $("#ds-harga").attr('readonly', 'true');
+                }else{
+                    $("#ds-harga").removeAttr('readonly');
+                }
                 $.ajax({
                     url: "{{ route('admin.input-rincian-rka.data-rinci-parsial1') }}",
                     method: "POST",
@@ -187,6 +194,7 @@
                         $("#ds-vol2").val(data.vol2);
                         $("#ds-vol3").val(data.vol3);
                         $("#ds-vol4").val(data.vol4);
+                        $("#ds-spesifikasi").val(data.spesifikasi);
                         $("#ds-volume").val(data.volume);
                         $("#ds-satuan").val(data.satuan);
                         $("#ds-harga").val(data.harga);
@@ -194,6 +202,86 @@
                     }
                 });
             });
+            $("#ds-vol1").on("input", function(){
+                hitung_volume();
+            });
+            $("#ds-vol2").on("input", function(){
+                hitung_volume();
+            });
+            $("#ds-vol3").on("input", function(){
+                hitung_volume();
+            });
+            $("#ds-vol4").on("input", function(){
+                hitung_volume();
+            });
+            $("#ds-harga").on("input", function(){
+                hitung_volume();
+            });
+            $("#ds-sat1").on("input", function(){
+                generate_satuan();
+            });
+            $("#ds-sat2").on("input", function(){
+                generate_satuan();
+            });
+            function generate_satuan() {
+                let sat1 = $("#ds-sat1").val();
+                let sat2 = $("#ds-sat2").val();
+                if (sat2 == '') {
+                    $("#ds-satuan").val(sat1);
+                }else{
+                    $("#ds-satuan").val(sat1.charAt(0)+sat2.charAt(0));
+                }
+            }
+            function hitung_volume() {
+                let vol1 = $("#ds-vol1").val() == 0 ? 0:$("#ds-vol1").val();
+                let vol2 = $("#ds-vol2").val() == 0 ? 1:$("#ds-vol2").val();
+                let vol3 = $("#ds-vol3").val() == 0 ? 1:$("#ds-vol3").val();
+                let vol4 = $("#ds-vol4").val() == 0 ? 1:$("#ds-vol4").val();
+                let harga = $("#ds-harga").val();
+                let vol = vol1*vol2*vol3*vol4;
+                $("#ds-volume").val(vol);
+                $("#ds-jumlah").val(harga*vol);
+            }
+            $("#ds2-vol1").on("input", function(){
+                hitung_volume2();
+            });
+            $("#ds2-vol2").on("input", function(){
+                hitung_volume2();
+            });
+            $("#ds2-vol3").on("input", function(){
+                hitung_volume2();
+            });
+            $("#ds2-vol4").on("input", function(){
+                hitung_volume2();
+            });
+            $("#ds2-harga").on("input", function(){
+                hitung_volume2();
+            });
+            $("#ds2-sat1").on("input", function(){
+                generate_satuan2();
+            });
+            $("#ds2-sat2").on("input", function(){
+                generate_satuan2();
+            });
+            function generate_satuan2() {
+                let sat1 = $("#ds2-sat1").val();
+                let sat2 = $("#ds2-sat2").val();
+                if (sat2 == '') {
+                    $("#ds2-satuan").val(sat1);
+                }else{
+                    $("#ds2-satuan").val(sat1.charAt(0)+sat2.charAt(0));
+                }
+            }
+            function hitung_volume2() {
+                let vol1 = $("#ds2-vol1").val() == 0 ? 0:$("#ds2-vol1").val();
+                let vol2 = $("#ds2-vol2").val() == 0 ? 1:$("#ds2-vol2").val();
+                let vol3 = $("#ds2-vol3").val() == 0 ? 1:$("#ds2-vol3").val();
+                let vol4 = $("#ds2-vol4").val() == 0 ? 1:$("#ds2-vol4").val();
+                let harga = $("#ds2-harga").val();
+                let vol = vol1*vol2*vol3*vol4;
+                $("#ds2-volume").val(vol);
+                $("#ds2-jumlah").val(harga*vol);
+            }
             $('.btn-tambah-subheader').on('click', function(){
                 $('#modal-tambah-subheader').modal('show');
                 $('#modal-tambah-subheader').modal({
@@ -209,6 +297,22 @@
                 $("#ts-kdsub").val($(this).attr('data-kdsub'));
                 $("#ts-kdrek").val($(this).attr('data-kdrek'));
                 $("#ts-nourut").val($(this).attr('data-nourut'));
+            })
+            $('.btn-tambah-subheader2').on('click', function(){
+                $('#modal-tambah-subheader2').modal('show');
+                $('#modal-tambah-subheader2').modal({
+                    backdrop: 'static',
+                    keyboard: false
+                });
+                $('#loading-index').hide();
+                $('#table-index').hide();
+                $("#ds2-kdurusan").val($(this).attr('data-kdurusan'));
+                $("#ds2-kdsuburusan").val($(this).attr('data-kdsuburusan'));
+                $("#ds2-kdprogram").val($(this).attr('data-kdprogram'));
+                $("#ds2-kdgiat").val($(this).attr('data-kdgiat'));
+                $("#ds2-kdsub").val($(this).attr('data-kdsub'));
+                $("#ds2-kdrek").val($(this).attr('data-kdrek'));
+                $("#ds2-nourut").val($(this).attr('data-nourut'));
             })
             $('#btn-index').on('click', function(){
                 getIndex();
@@ -412,6 +516,156 @@
         </div>
         <!-- /.modal-dialog -->
     </div>
+    <div class="modal fade" id="modal-tambah-subheader2">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Tambah Rincian RKA</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('admin.input-rincian-rka.create-parsial1') }}" method="POST">
+                    @csrf
+                    <div class="input-group row mb-1">
+                        <label class="col-sm-3 col-form-label">Uraian Rincian</label>
+                        <div class="col-sm-9">
+                            <textarea type="" class="form-control @error('uraian') is-invalid @enderror" id="ds2-uraian" name="uraian" required placeholder="Ketikkan uraian rincian..."></textarea>
+                            @error('uraian')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="input-group row mb-1" id="d1">
+                        <label class="col-sm-3 col-form-label">Volume 1</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control @error('vol1') is-invalid @enderror" id="ds2-vol1" name="vol1" value="0" required placeholder="Ketikkan volume 1...">
+                            @error('vol1')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <label class="col-sm-2 col-form-label">Satuan 1</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control @error('sat1') is-invalid @enderror" id="ds2-sat1" name="sat1" required placeholder="Ketikkan satuan 1...">
+                            @error('sat1')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="input-group row mb-1" id="d2">
+                        <label class="col-sm-3 col-form-label">Volume 2</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control @error('vol2') is-invalid @enderror" id="ds2-vol2" name="vol2" value="0" placeholder="Ketikkan volume 2...">
+                            @error('vol2')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <label class="col-sm-2 col-form-label">Satuan 2</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control @error('sat2') is-invalid @enderror" id="ds2-sat2" name="sat2" placeholder="Ketikkan satuan 2...">
+                            @error('sat2')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="input-group row mb-1" id="d3">
+                        <label class="col-sm-3 col-form-label">Volume 3</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control @error('vol3') is-invalid @enderror" id="ds2-vol3" name="vol3" value="0" placeholder="Ketikkan volume 3...">
+                            @error('vol3')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <label class="col-sm-2 col-form-label">Satuan 3</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control @error('sat3') is-invalid @enderror" id="ds2-sat3" name="sat3" placeholder="Ketikkan satuan 3...">
+                            @error('sat3')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="input-group row mb-1" id="d4">
+                        <label class="col-sm-3 col-form-label">Volume 4</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control @error('vol4') is-invalid @enderror" id="ds2-vol4" name="vol4" value="0" placeholder="Ketikkan volume 4...">
+                            @error('vol4')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <label class="col-sm-2 col-form-label">Satuan 4</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control @error('sat4') is-invalid @enderror" id="ds2-sat4" name="sat4" placeholder="Ketikkan satuan 4...">
+                            @error('sat4')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="input-group row mb-1">
+                        <label class="col-sm-3 col-form-label">Spesifikasi</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control @error('spesifikasi') is-invalid @enderror" id="ds2-spesifikasi" name="spesifikasi" placeholder="Spesifikasi">
+                            @error('spesifikasi')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="input-group row mb-1">
+                        <label class="col-sm-3 col-form-label">Harga</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control @error('harga') is-invalid @enderror" id="ds2-harga" name="harga" required placeholder="Ketikkan harga...">
+                            @error('harga')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="input-group row mb-1">
+                        <label class="col-sm-3 col-form-label">Volume</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control @error('volume') is-invalid @enderror" readonly id="ds2-volume" name="volume" required placeholder="Ketikkan volume...">
+                            @error('volume')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="input-group row mb-1">
+                        <label class="col-sm-3 col-form-label">Satuan</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control @error('satuan') is-invalid @enderror" id="ds2-satuan" name="satuan" required placeholder="Ketikkan satuan...">
+                            @error('satuan')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="input-group row mb-1">
+                        <label class="col-sm-3 col-form-label">Jumlah</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control @error('jumlah') is-invalid @enderror" id="ds2-jumlah" name="jumlah" required placeholder="Ketikkan jumlah...">
+                            @error('jumlah')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <input type="hidden" id="ds2-kdurusan" name="kdurusan">
+                <input type="hidden" id="ds2-kdsuburusan" name="kdsuburusan">
+                <input type="hidden" id="ds2-kdprogram" name="kdprogram">
+                <input type="hidden" id="ds2-kdgiat" name="kdgiat">
+                <input type="hidden" id="ds2-kdsub" name="kdsub">
+                <input type="hidden" id="ds2-kdrek" name="kdrek">
+                <input type="hidden" id="ds2-nourut" name="nourut">
+                <input type="hidden" id="ds2-urut" name="urut">
+                <input type="hidden" value="{{ Request::input('tipe') }}" name="tipe">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+                <button type="submit" class="btn btn-primary">Simpan</button>
+            </div>
+            </form>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
     <div class="modal fade" id="modal-detail-subheader">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -422,18 +676,19 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{{ route('admin.input-rka.create-parsial1') }}" method="POST">
+                <form action="{{ route('admin.input-rincian-rka.update-parsial1') }}" method="POST">
                     @csrf
+                    @method('PUT')
                     <div class="input-group row mb-1">
-                        <label class="col-sm-3 col-form-label">Uraian Sub Header</label>
+                        <label class="col-sm-3 col-form-label">Uraian Rincian</label>
                         <div class="col-sm-9">
-                            <textarea type="" class="form-control @error('uraian') is-invalid @enderror" id="ds-uraian" name="uraian" required placeholder="Ketikkan uraian sub header..."></textarea>
+                            <textarea type="" class="form-control @error('uraian') is-invalid @enderror" id="ds-uraian" name="uraian" required placeholder="Ketikkan uraian rincian..."></textarea>
                             @error('uraian')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
-                    <div class="input-group row mb-1">
+                    <div class="input-group row mb-1" id="d1">
                         <label class="col-sm-3 col-form-label">Volume 1</label>
                         <div class="col-sm-3">
                             <input type="text" class="form-control @error('vol1') is-invalid @enderror" id="ds-vol1" name="vol1" required placeholder="Ketikkan volume 1...">
@@ -449,50 +704,59 @@
                             @enderror
                         </div>
                     </div>
-                    <div class="input-group row mb-1">
+                    <div class="input-group row mb-1" id="d2">
                         <label class="col-sm-3 col-form-label">Volume 2</label>
                         <div class="col-sm-3">
-                            <input type="text" class="form-control @error('vol2') is-invalid @enderror" id="ds-vol2" name="vol2" required placeholder="Ketikkan volume 1...">
+                            <input type="text" class="form-control @error('vol2') is-invalid @enderror" id="ds-vol2" name="vol2" placeholder="Ketikkan volume 2...">
                             @error('vol2')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                         <label class="col-sm-2 col-form-label">Satuan 2</label>
                         <div class="col-sm-4">
-                            <input type="text" class="form-control @error('sat2') is-invalid @enderror" id="ds-sat2" name="sat2" required placeholder="Ketikkan satuan 1...">
+                            <input type="text" class="form-control @error('sat2') is-invalid @enderror" id="ds-sat2" name="sat2" placeholder="Ketikkan satuan 2...">
                             @error('sat2')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
-                    <div class="input-group row mb-1">
+                    <div class="input-group row mb-1" id="d3">
                         <label class="col-sm-3 col-form-label">Volume 3</label>
                         <div class="col-sm-3">
-                            <input type="text" class="form-control @error('vol3') is-invalid @enderror" id="ds-vol3" name="vol3" required placeholder="Ketikkan volume 3...">
+                            <input type="text" class="form-control @error('vol3') is-invalid @enderror" id="ds-vol3" name="vol3" placeholder="Ketikkan volume 3...">
                             @error('vol3')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                         <label class="col-sm-2 col-form-label">Satuan 3</label>
                         <div class="col-sm-4">
-                            <input type="text" class="form-control @error('sat3') is-invalid @enderror" id="ds-sat3" name="sat3" required placeholder="Ketikkan satuan 3...">
+                            <input type="text" class="form-control @error('sat3') is-invalid @enderror" id="ds-sat3" name="sat3" placeholder="Ketikkan satuan 3...">
                             @error('sat3')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
-                    <div class="input-group row mb-1">
+                    <div class="input-group row mb-1" id="d4">
                         <label class="col-sm-3 col-form-label">Volume 4</label>
                         <div class="col-sm-3">
-                            <input type="text" class="form-control @error('vol4') is-invalid @enderror" id="ds-vol4" name="vol4" required placeholder="Ketikkan volume 4...">
+                            <input type="text" class="form-control @error('vol4') is-invalid @enderror" id="ds-vol4" name="vol4" placeholder="Ketikkan volume 4...">
                             @error('vol4')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                         <label class="col-sm-2 col-form-label">Satuan 4</label>
                         <div class="col-sm-4">
-                            <input type="text" class="form-control @error('sat4') is-invalid @enderror" id="ds-sat4" name="sat4" required placeholder="Ketikkan satuan 4...">
+                            <input type="text" class="form-control @error('sat4') is-invalid @enderror" id="ds-sat4" name="sat4" placeholder="Ketikkan satuan 4...">
                             @error('sat4')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="input-group row mb-1">
+                        <label class="col-sm-3 col-form-label">Spesifikasi</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control @error('spesifikasi') is-invalid @enderror" id="ds-spesifikasi" name="spesifikasi" placeholder="Spesifikasi">
+                            @error('spesifikasi')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
@@ -500,7 +764,7 @@
                     <div class="input-group row mb-1">
                         <label class="col-sm-3 col-form-label">Harga</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control @error('harga') is-invalid @enderror" id="ds-harga" name="harga" required placeholder="Ketikkan harga...">
+                            <input type="text" class="form-control @error('harga') is-invalid @enderror" readonly id="ds-harga" name="harga" required placeholder="Ketikkan harga...">
                             @error('harga')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -518,7 +782,7 @@
                     <div class="input-group row mb-1">
                         <label class="col-sm-3 col-form-label">Satuan</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control @error('satuan') is-invalid @enderror" id="ds-satuan" readonly name="satuan" required placeholder="Ketikkan satuan...">
+                            <input type="text" class="form-control @error('satuan') is-invalid @enderror" id="ds-satuan" name="satuan" required placeholder="Ketikkan satuan...">
                             @error('satuan')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -543,6 +807,7 @@
                 <input type="hidden" id="ds-kdrek" name="kdrek">
                 <input type="hidden" id="ds-nourut" name="nourut">
                 <input type="hidden" id="ds-urut" name="urut">
+                <input type="hidden" value="{{ Request::input('tipe') }}" name="tipe">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
                 <button type="submit" class="btn btn-primary">Simpan</button>
             </div>
