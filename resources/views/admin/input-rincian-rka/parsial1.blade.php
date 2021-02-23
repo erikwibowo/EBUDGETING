@@ -322,32 +322,39 @@
                     getIndex();
                 }
             });
+            $('#q-kelompok').on('change', function() {
+                if ($("#q-index").val() != '') {
+                    getIndex();
+                }
+            });
 
             function getIndex() {
                 $('#loading-index').text("Memuat...");
-                $('#loading-index').show(500);
+                $('#loading-index').hide();
                 $('#table-index').hide();
                 let q = $('#q-index').val();
+                let kelompok = $('#q-kelompok').val();
                 $.ajax({
                     url: "{{ config('variable.api-index') }}",
                     method: "GET",
                     dataType: "JSON",
                     data:{
                         tahun: 2021,
-                        keyword: q
+                        keyword: q,
+                        kelompok: kelompok
                     },
                     success: function(data){
                         if (data.data.length > 0) {
-                            $('#loading-index').hide(500);
+                            // $('#loading-index').hide(500);
                             $('#table-index').show();
                             let html = ``; 
                             for (let i = 0; i < data.data.length; i++) {
                                 html += `
                                     <tr>
                                         <td>
-                                            <input type="radio" class="radio-index" data-uraian="${data.data[i].namassh}" data-spesifikasi="${data.data[i].spesifikasi}" data-harga="${data.data[i].harga}" data-satuan="${data.data[i].satuan}" value="${data.data[i].kodessh}" name="idssh" required>
+                                            <input type="radio" class="radio-index" data-uraian="${data.data[i].uraian}" data-spesifikasi="${data.data[i].spesifikasi}" data-harga="${data.data[i].harga}" data-satuan="${data.data[i].satuan}" value="${data.data[i].kode}" name="idssh" required>
                                         </td>
-                                        <td>${data.data[i].namassh}</td>
+                                        <td>${data.data[i].uraian}</td>
                                         <td>${data.data[i].kelompok}</td>
                                         <td>${data.data[i].spesifikasi}</td>
                                         <td>${data.data[i].satuan}</td>
@@ -358,7 +365,8 @@
                             }
                             $('#data-index').html(html);
                         }else{
-                            $('#loading-index').text("Data SSH tidak ditemukan. Coba lagi dengan keyword lain");
+                            $('#loading-index').show(500);
+                            $('#loading-index').text("Data tidak ditemukan. Coba lagi dengan keyword lain");
                         }
                     }
                 });
@@ -467,7 +475,13 @@
             <div class="modal-body">
                 <div class="row m-1 mb-3">
                     <div class="input-group input-group-lg">
-                        <input type="text" class="form-control" id="q-index" placeholder="Ketikkan nama ssh...">
+                        <select class="form-control" id="q-kelompok">
+                            <option value="ssh">SSH</option>
+                            <option value="hspk">HSPK</option>
+                            <option value="sbu">SBU</option>
+                            <option value="asb">ASB</option>
+                        </select>
+                        <input type="text" class="form-control" style="width: 70%" id="q-index" placeholder="Ketikkan nama ssh...">
                         <span class="input-group-append">
                             <button type="button" class="btn btn-success btn-flat" id="btn-index">Cari</button>
                         </span>
@@ -481,7 +495,7 @@
                             <thead>
                                 <tr>
                                     <th>Pilih</th>
-                                    <th>Nama SSH</th>
+                                    <th>Uraian</th>
                                     <th>Kelompok</th>
                                     <th>Spesifikasi</th>
                                     <th>Satuan</th>
