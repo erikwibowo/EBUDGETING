@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CetakController;
 use App\Http\Controllers\InputAnggaranController;
 use App\Http\Controllers\InputRincianRkaController;
 use App\Http\Controllers\InputRkaController;
@@ -58,4 +59,8 @@ Route::group(['prefix' => 'admin',  'middleware' => 'adminauth'], function () {
     
     Route::post('input-rincian-rka/parsial1/create-header', [InputRincianRkaController::class, 'create_header_parsial1'])->name('admin.input-rincian-rka.create-header-parsial1');
     Route::put('input-rincian-rka/parsial1/update-header', [InputRincianRkaController::class, 'update_header_parsial1'])->name('admin.input-rincian-rka.update-header-parsial1');
+
+    //Cetak
+    Route::get('cetak/dpa', [CetakController::class, 'dpa'])->name('admin.cetak.dpa');
+    Route::get('cetak/rka', [CetakController::class, 'rka'])->name('admin.cetak.rka');
 });

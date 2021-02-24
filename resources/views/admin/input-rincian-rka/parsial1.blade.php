@@ -298,6 +298,12 @@
                 $("#ts-kdrek").val($(this).attr('data-kdrek'));
                 $("#ts-nourut").val($(this).attr('data-nourut'));
             })
+            $('#form-tambah-subheader').on('submit', function(e){
+                if ($('#q-index').val() == '') {
+                    e.preventDefault();
+                    alert('Silahkan ketikkan keyword');
+                }
+            });
             $('.btn-tambah-subheader2').on('click', function(){
                 $('#modal-tambah-subheader2').modal('show');
                 $('#modal-tambah-subheader2').modal({
@@ -481,14 +487,14 @@
                             <option value="sbu">SBU</option>
                             <option value="asb">ASB</option>
                         </select>
-                        <input type="text" class="form-control" style="width: 70%" id="q-index" placeholder="Ketikkan nama ssh...">
+                        <input type="text" class="form-control" style="width: 70%" id="q-index" placeholder="Ketikkan keyword...">
                         <span class="input-group-append">
                             <button type="button" class="btn btn-success btn-flat" id="btn-index">Cari</button>
                         </span>
                     </div>
                 </div>
                 <h4 class="text-center" id="loading-index">Memuat...</h4>
-                <form action="{{ route('admin.input-rincian-rka.create-parsial1') }}" method="POST">
+                <form id="form-tambah-subheader" action="{{ route('admin.input-rincian-rka.create-parsial1') }}" method="POST">
                     @csrf
                     <div class="table-responsive" style="display: block; position: relative; height: 500px; overflow: auto;" id="table-index">
                         <table class="table table-bordered table-hover table-striped">

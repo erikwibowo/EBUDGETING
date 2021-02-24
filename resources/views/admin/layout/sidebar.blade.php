@@ -105,6 +105,18 @@
             </ul>
           </li>
           <li class="nav-header">CETAK</li>
+          <li class="nav-item">
+            <a href="{{ route('admin.cetak.dpa') }}" class="nav-link {{ Request::segment(2) == 'otorisasi' ? 'active':'' }}">
+              <i class="fas fa-file-pdf nav-icon"></i>
+              <p>Cetak DPA</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{ route('admin.cetak.rka') }}" class="nav-link {{ Request::segment(2) == 'otorisasi' ? 'active':'' }}">
+              <i class="fas fa-file-pdf nav-icon"></i>
+              <p>Cetak RKA</p>
+            </a>
+          </li>
           {{-- <li class="nav-item menu-open">
             <a href="#" class="nav-link active">
               <i class="nav-icon fas fa-circle"></i>
