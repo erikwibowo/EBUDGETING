@@ -52,7 +52,7 @@
                             @endphp
                             @foreach ($data as $i)
                                 <tr style="{{ $i->tipe == 'H' ? 'font-weight: bold':'' }}">
-                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $i->tipe == 'H' ? $loop->iteration:'' }}</td>
                                     <td>{{ $i->tipe == "S" ? '- '.$i->uraian:$i->uraian }}</td>
                                     <td class="text-right">@rp($i->susun)</td>
                                     <td class="text-right">@rp($i->ubah)</td>
@@ -352,7 +352,7 @@
                                 html += `
                                     <tr>
                                         <td>
-                                            <input type="radio" class="radio-index" data-uraian="${data.data[i].uraian}" data-spesifikasi="${data.data[i].spesifikasi}" data-harga="${data.data[i].harga}" data-satuan="${data.data[i].satuan}" value="${data.data[i].kode}" name="idssh" required>
+                                            <input type="radio" class="radio-index" data-uraian="${data.data[i].uraian}" data-spesifikasi="${data.data[i].spesifikasi}" data-harga="${data.data[i].harga}" data-satuan="${data.data[i].satuan}" value="${data.data[i].id_sipd}" name="idssh" required>
                                         </td>
                                         <td>${data.data[i].uraian}</td>
                                         <td>${data.data[i].kelompok}</td>
